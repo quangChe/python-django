@@ -1,13 +1,10 @@
 from rest_framework import serializers
 from superhumans.models import Heroes, Villains
 
-class HeroesSerializer(serializers.Serializer):
-  id = serializers.IntegerField(read_only=True)
-  alias = serializers.CharField(max_length=100)
-  real_name = serializers.CharField(max_length=100)
-  superpower = serializers.CharField(max_length=400)
-  hero_tier = serializers.IntegerField(max_value=10, min_value=1)
-  nemesis = serializers.PrimaryKeyRelatedField(read_only=True)
+class HeroesSerializer(serializers.ModelSerializer):
+  class Meta: 
+    model = Heroes
+    fields = ['id', 'alias', 'real_name', 'superpower', 'hero_tier', 'nemesis']
 
   def create(self, valid_data):
     '''
@@ -27,12 +24,10 @@ class HeroesSerializer(serializers.Serializer):
     return instance
 
 
-class VillainsSerializer(serializers.Serializer):
-  id = serializers.IntegerField(read_only=True)
-  alias = serializers.CharField(max_length=100)
-  real_name = serializers.CharField(max_length=100)
-  superpower = serializers.CharField(max_length=400)
-  threat_level = serializers.IntegerField(max_value=10, min_value=1)
+class VillainsSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Villains
+    fields = ['id', 'alias', 'real_name', 'superpower', 'threat_level']
 
   def create(self, valid_data):
     '''
