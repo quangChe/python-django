@@ -18,6 +18,7 @@ load_dotenv()
 
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PW = os.getenv('POSTGRES_PW')
+POSTGRES_DB = os.getenv('POSTGRES_DB')
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'first_app',
+    'heroes',
 ]
 
 MIDDLEWARE = [
@@ -79,7 +80,7 @@ WSGI_APPLICATION = 'first_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'firstapi',
+        'NAME': POSTGRES_DB,
         'USER': POSTGRES_USER,
         'PASSWORD': POSTGRES_PW,
         'HOST': '0.0.0.0',
