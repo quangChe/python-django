@@ -11,7 +11,7 @@ class Heroes(models.Model):
     return self.alias
   
   def can_defeat(self, villain_level):
-    return (11 - villain_level >= self.hero_tier);
+    return (11 - villain_level >= self.hero_tier)
 
 class Villains(models.Model):
   alias = models.CharField(max_length=100)
