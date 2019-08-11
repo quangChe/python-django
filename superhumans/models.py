@@ -1,6 +1,9 @@
 from django.db import models
 
 class Villains(models.Model):
+  '''
+  Model for Villains data
+  '''
   alias = models.CharField(max_length=100)
   real_name = models.CharField(max_length=100)
   superpower = models.CharField(max_length=400) 
@@ -10,6 +13,9 @@ class Villains(models.Model):
     return self.alias 
 
 class Heroes(models.Model):
+  '''
+  Model for Heroes data
+  '''
   alias = models.CharField(max_length=100)
   real_name = models.CharField(max_length=100)
   superpower = models.CharField(max_length=400)
