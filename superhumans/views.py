@@ -25,7 +25,7 @@ def heroes_list(request):
 
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT', ])
 def heroes_detail(request, key):
   '''
   Retrieve, update or delete a single hero
@@ -38,3 +38,10 @@ def heroes_detail(request, key):
   if request.method == 'GET':
     serializer = HeroesSerializer(heroes)
     return Response(serializer.data)
+
+  elif request.method == 'PUT':
+    serializer = HeroesSerializer(heroes, data=request.data)
+    if serializer.is_valid():
+      serializer.save()
+      return Response(serializer.data)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
