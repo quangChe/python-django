@@ -1,53 +1,40 @@
-from django.shortcuts import render
-from django.http import Http404
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from superhumans.models import Heroes, Villains
 from superhumans.serializers import HeroesSerializer, VillainsSerializer
+from rest_framework import mixins, generics
 
-
-class HeroesList(APIView):
+class HeroesList(mixins.ListModelMixin, 
+                 mixins.CreateModelMixin, 
+                 generics.GenericAPIView):
   """
   List all heroes, or create a new hero.
   """
-  def get(self, request, format=None):
-    heroes = Heroes.objects.all()
-    serializer = HeroesSerializer(heroes, many=True)
-    return Response(serializer.data)
 
-  def post(self, request, format=None):
-    serializer = HeroesSerializer(data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  queryset = Heroes.objects.all()
+  serializer_class = HeroesSerializer
 
-class HeroesDetail(APIView):
+  def get(self, request, *args, **kwargs):
+    return self.list(request, *args, **kwargs)
+
+  def post(self, request, *args, **kwargs):
+    return self.create(request, *args, **kwargs)
+
+class HeroesDetail(mixins.RetrieveModelMixin,
+                   mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin,
+                   generics.GenericAPIView):
   """
   Retrieve, update and delete
   """
-  def get_object(self, pk):
-    try:
-      return Heroes.objects.get(pk=pk)
-    except Heroes.DoesNotExist:
-      raise Http404
 
-  def get(self, request, pk, format=None):
-    heroes = self.get_object(pk)
-    serializer = HeroesSerializer(heroes)
-    return Response(serializer.data)
+  queryset = Heroes.objects.all()
+  serializer_class = HeroesSerializer
 
-  def put(self, request, pk, format=None):
-    heroes = self.get_object(pk)
-    serializer = HeroesSerializer(heroes, data=request.data)
-    if serializer.is_valid():
-      serializer.save()
-      return Response(serializer.data)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+  def get(self, request, *args, **kwargs):
+    return self.retrieve(request, *args, **kwargs)
 
-  def delete(self, request, pk, format=None):
-    heroes = self.get_object(pk)
-    heroes.delete()
-    return Response(status=status.HTTP_204_NO_CONTENT)
+  def put(self, request, *args, **kwargs):
+    return self.update(request, *args, **kwargs)
 
+  def delete(self, request, *args, **kwargs):
+    return self.destroy(request, *args, **kwargs)
+  
