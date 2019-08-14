@@ -1,31 +1,28 @@
 from django.shortcuts import render
 from rest_framework import status
 from rest_framework.parsers import JSONParser
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
-from superhumans.models import Heroes
-from superhumans.serializers import HeroesSerializer
+from superhumans.models import Heroes, Villains
+from superhumans.serializers import HeroesSerializer, VillainsSerializer
 
-@api_view(['GET', 'POST'])
-def heroes_list(request):
-  '''
-  List all heroes, or create a new hero
-  '''
-  if request.method == 'GET':
+
+class HeroesList(APIView):
+  """
+  List all heroes, or create a new hero.
+  """
+  def get(self, request, format=None):
     heroes = Heroes.objects.all()
     serializer = HeroesSerializer(heroes, many=True)
     return Response(serializer.data)
 
-  elif request.method == 'POST':
+  def post(self, request, format=None):
     serializer = HeroesSerializer(data=request.data)
     if serializer.is_valid():
       serializer.save()
       return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-@api_view(['GET', 'PUT', ])
 def heroes_detail(request, key):
   '''
   Retrieve, update or delete a single hero
@@ -45,3 +42,7 @@ def heroes_detail(request, key):
       serializer.save()
       return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+  elif request.method == 'DELETE':
+    heroes.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
